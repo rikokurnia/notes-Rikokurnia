@@ -6,11 +6,12 @@ class NoteInputForm extends React.Component {
         this.state = {
             title:'',
             body:'',
+            bodyCharLimit:50
         }
 
         this.onTitleEventHandler = this.onTitleEventHandler.bind(this);
         this.onBodyEventHandler = this.onBodyEventHandler.bind(this);
-        this.onSubmitEventHandler = this.onSubmitEventHandler.bind(this)
+        this.onSubmitEventHandler = this.onSubmitEventHandler.bind(this);
     }
 
     onTitleEventHandler(event){
@@ -22,11 +23,12 @@ class NoteInputForm extends React.Component {
     }
 
     onBodyEventHandler(event) {
-        this.setState(() => {
-            return{
-                body: event.target.value
-            }
-        })
+        const newBody = event.target.value;
+        if (newBody.length <= this.state.bodyCharLimit) {
+            this.setState({
+                body: newBody,
+            });
+        }
     }
 
     onSubmitEventHandler(event) {
@@ -34,17 +36,19 @@ class NoteInputForm extends React.Component {
         this.props.noteAdd(this.state)
     }
 
+ 
    
 
     render() {
-        return(
+        const remainingChars = this.state.bodyCharLimit - this.state.body.length;
+    return(
             <div className="note-input">
                 <h2>Tambahkan Catatan</h2>
-            <form type="submit" onSubmit={this.onSubmitEventHandler}>
-                <p className="note-input__title__char-limit">Char Limit : </p>
+            <form onSubmit={this.onSubmitEventHandler}>
+                <p className="note-input__title__char-limit">Char Limit : {remainingChars} </p>
                 <input type="text" placeholder="Isi judul anda ... " value={this.state.title} onChange={this.onTitleEventHandler}/>
                 <textarea className="note-input__body" type="text" placeholder="Tulis Catatanmu disini ... " value={this.state.body} onChange={this.onBodyEventHandler} />
-                <button>Buat</button>
+                <button  type="submit">Buat</button>
             </form>
             </div>
         )
